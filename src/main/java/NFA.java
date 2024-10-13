@@ -174,13 +174,70 @@ public class NFA{
         /* TODO: IMPLEMENT THIS METHOD */
         /* --------------------------------- */
 
+        //Add e transitions from all accept states to the start state
+        for (int fState : finalStates){
+            addTransition(fState, 'e', startState);
+        }
+        //add new state, s, with a e transition to start state
+        int s = addState();
+        addTransition(s, 'e', startState);
 
-
+        //set s to be the start state
+        setStartState(s);
 
         /* --------------------------------- */
 
 
 
+    }
+
+    //helper function to merge machines for union and concat
+    //puts all nodes in same 'universe' but no connections between them
+    //index: starting index (+1 to how many states current machine has)
+    //NFA other: new machine to be merged in
+    private void merge(NFA other, int index){
+        //add all states as other NFA's state ID + index
+        for (int state : other.states){
+            //check if index already exists
+            if(other.states.contains(state + index)) break;
+
+            //add the new state
+            addState(state + index);
+            ID_Counter++; //manula addState does not increment ID_Counter
+        }
+
+        //add all transitions
+        for (int state : other.states){
+            //create for any 'a'
+            HashSet<Integer> a_transitions = other.getTransitions(state, 'a');
+            //check if null
+            if (!a_transitions.isEmpty()){
+                //set the a transitions
+                for (int des : a_transitions){
+                    addTransition(state + index, 'a', des + index);
+                }
+            }
+
+            //create for any 'd'
+            HashSet<Integer> d_transitions = other.getTransitions(state, 'd');
+            //check if null
+            if (!d_transitions.isEmpty()){
+                //set the d transitions
+                for (int des : d_transitions){
+                    addTransition(state + index, 'd', des + index);
+                }
+            }
+
+            //create for any 'e'
+            HashSet<Integer> e_transitions = other.getTransitions(state, 'e');
+            //check if null
+            if (!e_transitions.isEmpty()){
+                //set the e transitions
+                for (int des : e_transitions){
+                    addTransition(state + index, 'e', des + index);
+                }
+            }
+        }
     }
 
     /* Applies the union operator. Changes this machine but not the parameter */
@@ -190,9 +247,23 @@ public class NFA{
         /* --------------------------------- */
         /* TODO: IMPLEMENT THIS METHOD */
         /* --------------------------------- */
+        //index: starting index (+1 to how many states current machine has)
+        int index = states.size() + 1;
+        //merge machine helper function
+        merge(other, index);
 
+        //re-add final states to nodes from NFA other
+        for (int states: other.finalStates){
+            addFinalState(states + index);
+        }
+        //create new dummy start with e to old start states
+        int s = addState();
+        int other_start = other.getStartState();
+        addTransition(s, 'e', other_start + index);
+        addTransition(s, 'e', startState);
 
-
+        //set s to be the start state
+        setStartState(s);
 
         /* --------------------------------- */
 
@@ -206,10 +277,27 @@ public class NFA{
         /* --------------------------------- */
         /* TODO: IMPLEMENT THIS METHOD */
         /* --------------------------------- */
+        //save old final states
+        HashSet<Integer> final_states = this.finalStates;
 
+        //clear final states before merging
+        clearFinalStates();
 
+        //index: starting index (+1 to how many states current machine has)
+        int index = states.size() + 1;
+        //merge machine helper function
+        merge(other, index);
 
+        //reset final states to final states of NFA other
+        for (int states: other.finalStates){
+            addFinalState(states + index);
+        }
 
+        //create 'e' transition from old to other NFA
+        int transition_to = (other.startState) + index;
+        for (int state : final_states){
+            addTransition(state, 'e', transition_to);
+        }
         /* --------------------------------- */
 
     }
