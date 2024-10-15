@@ -206,6 +206,8 @@ public class NFA{
         //set s to be the start state
         setStartState(s);
 
+        addFinalState(s);
+
         /* --------------------------------- */
 
 
