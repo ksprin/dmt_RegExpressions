@@ -133,18 +133,44 @@ public class Main{
             return nfa;
         }
 
+        // i am using the expChars from above
         /* Case 4 - First character is an open paren */
 
-		/*
-		If first character is open paren
-			Work your way down the exp to find index of closing paren that matches this one.
+        //* If first character is open paren *//
+        if (expChars[0] == '('){
 
-			Call buildNFA() on everything within the parentheses
+            int countRightParen = 1;
+            //* Work your way down the exp to find index of closing paren that matches this one.
+            // for loop increments count when not right paren and breaks when it finds the first match
+            for (int i = 1; i < expChars.length; i++){
+                if (expChars[i] != ')'){
+                    countRightParen++;
+                }
+                else {
+                    break;
+                }
+            }
 
-			Call star() on this NFA (because right paren must have * after it)
+            //* Call buildNFA() on everything within the parentheses*//
 
-			Concatenate with the NFA for the rest of the expression after the *
-		*/
+            // call buildNFA on NFA in the parenthesis (index 1 to countRightParen-1)
+            String substring = exp.substring(1, countRightParen-1);
+            NFA substringNFA = buildNFA(substring);
+
+            //* Call star() on this NFA (because right paren must have * after it)
+            substringNFA.star();
+
+            //* Concatenate with the NFA for the rest of the expression after the *
+
+            //call buildNFA on the rest of the string (index after right parenthesis and star to end)
+            String endSubstring = exp.substring(countRightParen+2);
+            NFA endSubstringNFA = buildNFA(endSubstring);
+
+            //just concatenate() with the NFA for rest of the expression
+            substringNFA.concatenate(endSubstringNFA);
+
+        }
+
 
         /* --------------------------------------------- */
 

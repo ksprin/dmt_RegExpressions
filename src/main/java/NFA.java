@@ -158,11 +158,31 @@ public class NFA{
         /* TODO: IMPLEMENT THIS METHOD */
         /* --------------------------------- */
 
+        // if start state epsilons, have to epsilon at the beginning
+        currentStates = epsilonTransition(currentStates);
 
+        // this method should take a string and simulate the NFA moving from state(s) to state(s) given each input character
+        // if machine ends in final state, return true
 
+        // for all characters in string
+        for(int i = 0; i < input.length(); i++){
+            char inputChar = translateInput(input.charAt(i));
+
+            // given input, transition to the next states and make them the current state (include epsilon)
+            currentStates = transition(currentStates, inputChar);
+            currentStates = epsilonTransition(currentStates);
+        }
+
+        // after taking all transitions, check the current states to see if one is in a final state
+        for (int state : currentStates){
+            if (finalStates.contains(state)){
+                return true;
+            }
+        }
 
         /* --------------------------------- */
 
+        // reject the string
         return false;
     }
 
@@ -178,7 +198,7 @@ public class NFA{
         for (int fState : finalStates){
             addTransition(fState, 'e', startState);
         }
-        //add new state, s, with a e transition to start state
+        //add new state, s, with an e transition to start state
         int s = addState();
         int start = startState;
         addTransition(s, 'e', start);
