@@ -154,7 +154,7 @@ public class Main{
             //* Call buildNFA() on everything within the parentheses*//
 
             // call buildNFA on NFA in the parenthesis (index 1 to countRightParen-1)
-            String substring = exp.substring(1, countRightParen-1);
+            String substring = exp.substring(1, countRightParen);
             NFA substringNFA = buildNFA(substring);
 
             //* Call star() on this NFA (because right paren must have * after it)
