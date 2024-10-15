@@ -169,6 +169,7 @@ public class Main{
             //just concatenate() with the NFA for rest of the expression
             substringNFA.concatenate(endSubstringNFA);
 
+            return substringNFA;
         }
 
 
