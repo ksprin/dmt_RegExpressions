@@ -24,7 +24,7 @@ public class Main{
 
         /* You can uncomment this line if you want to see the */
         /* machine your buildNFA method produced */
-        p("Machine: " + nfa);
+        //p("Machine: " + nfa);
 
         /* Read in the number of strings */
         int n = in.nextInt();
