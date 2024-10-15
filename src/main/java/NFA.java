@@ -178,7 +178,7 @@ public class NFA{
         for (int fState : finalStates){
             addTransition(fState, 'e', startState);
         }
-        //add new state, s, with a e transition to start state
+        //add new state, s, with an e transition to start state
         int s = addState();
         int start = startState;
         addTransition(s, 'e', start);
