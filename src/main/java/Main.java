@@ -153,12 +153,6 @@ public class Main{
 
             //* Call buildNFA() on everything within the parentheses*//
 
-//            // make new array that will hold the characters in between () (-2 to remove parenthesis)
-//            char[] expCharsParenthesis = new char[countRightParen-2];
-//            for (int i = 0; i < countRightParen-1; i++){
-//                expCharsParenthesis[i] = expChars[i+1];
-//            }
-
             // call buildNFA on NFA in the parenthesis (index 1 to countRightParen-1)
             String substring = exp.substring(1, countRightParen-1);
             NFA substringNFA = buildNFA(substring);
